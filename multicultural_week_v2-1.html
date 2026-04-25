@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🌍 세계 친구 축제 주간</title>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;}
+html,body{width:100%;height:100%;overflow:hidden;}
+body{font-family:'Gaegu','Noto Sans KR',sans-serif;background:#FFF8EC;}
+
+:root{
+  --red:#E84040;--orange:#FF8C00;--yellow:#FFD600;
+  --green:#22C55E;--blue:#3B82F6;--purple:#A855F7;
+  --pink:#EC4899;--teal:#14B8A6;--dark:#2D1A00;
+  --card:#FFFFFF;--cream:#FFF8EC;
+  --shadow:0 4px 20px rgba(0,0,0,.09);
+}
+
+/* ── BG FLAGS ── */
+#bgFlags{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.bf{position:absolute;font-size:1.5rem;opacity:.11;animation:bfFloat linear infinite;}
+@keyframes bfFloat{0%{transform:translateY(110vh) rotate(-10deg);opacity:0}5%{opacity:.11}95%{opacity:.11}100%{transform:translateY(-8vh) rotate(10deg);opacity:0}}
+
+/* ── SCREENS ── */
+.screen{position:fixed;inset:0;z-index:10;display:none;flex-direction:column;align-items:center;overflow:hidden;}
+.screen.active{display:flex;}
+.scroll-body{width:100%;flex:1;overflow-y:auto;overflow-x:hidden;}
+.scroll-body::-webkit-scrollbar{display:none;}
+
+/* ── RAINBOW BAR ── */
+.rainbow-bar{width:100%;height:7px;flex-shrink:0;background:linear-gradient(90deg,#E84040,#FF8C00,#FFD600,#22C55E,#3B82F6,#A855F7,#EC4899);}
+
+/* ── HEADER ── */
+.page-header{
+  width:100%;flex-shrink:0;padding:13px 16px 10px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.ph-title{font-size:1.25rem;font-weight:700;color:#fff;}
+.ph-sub{font-size:.8rem;color:rgba(255,255,255,.8);}
+.btn-back{padding:7px 16px;font-size:.9rem;font-family:'Gaegu',sans-serif;background:rgba(255,255,255,.25);color:#fff;border:1.5px solid rgba(255,255,255,.4);border-radius:50px;cursor:pointer;transition:.2s;}
+.btn-back:active{transform:scale(.94);}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{width:100%;flex-shrink:0;background:#fff;border-top:2px solid #F0E8D8;display:flex;box-shadow:0 -4px 16px rgba(0,0,0,.06);position:relative;z-index:20;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7px 4px 10px;cursor:pointer;transition:.2s;border:none;background:transparent;position:relative;}
+.nav-item::before{content:'';position:absolute;top:0;left:15%;right:15%;height:3px;border-radius:0 0 4px 4px;background:transparent;transition:background .2s;}
+.nav-item.active::before{background:var(--orange);}
+.nav-icon{font-size:1.55rem;transition:transform .2s;}
+.nav-label{font-size:.68rem;color:#AAA;margin-top:2px;transition:color .2s;}
+.nav-item.active .nav-icon{transform:scale(1.14);}
+.nav-item.active .nav-label{color:var(--orange);font-weight:700;}
+.nav-item:active{background:rgba(0,0,0,.03);}
+
+/* ════════════════════════════════
+   HOME
+════════════════════════════════ */
+#s-home{background:var(--cream);}
+.home-hero{
+  width:100%;flex-shrink:0;
+  background:linear-gradient(160deg,#FFF5D0,#FFE07A 60%,#FFD040);
+  padding:18px 16px 26px;text-align:center;position:relative;overflow:hidden;
+}
+.home-hero::after{content:'🌍🌎🌏';position:absolute;bottom:-8px;left:0;right:0;font-size:3.2rem;text-align:center;opacity:.1;}
+.hero-globe{font-size:4.5rem;animation:gSpin 8s linear infinite;display:inline-block;}
+@keyframes gSpin{0%{transform:rotateY(0)}100%{transform:rotateY(360deg)}}
+.hero-title{font-size:2.2rem;color:var(--dark);line-height:1.1;margin-top:4px;}
+.hero-sub{font-size:1rem;color:#8B5A00;margin-top:3px;}
+
+.stats-row{display:flex;gap:10px;padding:12px 16px 0;flex-shrink:0;}
+.stat-card{
+  flex:1;background:var(--card);border-radius:18px;padding:12px 8px;
+  text-align:center;box-shadow:var(--shadow);
+}
+.sc-num{font-size:1.9rem;font-weight:700;}
+.sc-label{font-size:.72rem;color:#AAA;margin-top:1px;}
+
+.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:12px 16px;}
+.menu-card{
+  background:var(--card);border-radius:20px;padding:18px 12px;
+  text-align:center;cursor:pointer;box-shadow:var(--shadow);
+  border:2.5px solid transparent;transition:all .22s cubic-bezier(.34,1.56,.64,1);
+}
+.menu-card:active{transform:scale(.93);}
+.mc-icon{font-size:3rem;margin-bottom:6px;display:block;}
+.mc-title{font-size:1.05rem;font-weight:700;color:var(--dark);margin-bottom:2px;}
+.mc-desc{font-size:.76rem;color:#AAA;line-height:1.3;}
+.mc-tag{display:inline-block;font-size:.65rem;padding:2px 8px;border-radius:50px;color:#fff;margin-top:5px;font-weight:700;}
+
+.mc-cookie{border-color:#FFD600;background:linear-gradient(135deg,#FFFBE6,#FFF5C0);}
+.mc-map   {border-color:#3B82F6;background:linear-gradient(135deg,#EFF6FF,#DBEAFE);}
+.mc-quiz  {border-color:#A855F7;background:linear-gradient(135deg,#FAF5FF,#EDE9FE);}
+.mc-chart {border-color:#22C55E;background:linear-gradient(135deg,#F0FDF4,#DCFCE7);}
+
+/* top countries preview */
+.top-section{padding:0 16px 20px;}
+.section-label{font-size:.95rem;font-weight:700;color:#8B5A00;display:flex;align-items:center;gap:6px;margin-bottom:10px;}
+.section-label::after{content:'';flex:1;height:1.5px;background:#F0E8D8;border-radius:2px;}
+.top-row{
+  display:flex;align-items:center;gap:8px;
+  background:var(--card);border-radius:14px;padding:9px 12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:6px;
+}
+.top-rank{font-size:1.3rem;width:24px;text-align:center;}
+.top-flag{font-size:1.4rem;}
+.top-name{font-size:1rem;font-weight:700;color:var(--dark);flex:1;}
+.top-bar-wrap{flex:2;height:14px;background:#F0E8D8;border-radius:50px;overflow:hidden;}
+.top-bar-fill{height:100%;border-radius:50px;transition:width 1.2s ease;}
+.top-cnt{font-size:.9rem;font-weight:700;min-width:20px;text-align:right;}
+
+/* ════════════════════════════════
+   FORTUNE COOKIE
+════════════════════════════════ */
+#s-cookie{background:linear-gradient(160deg,#FFF5D0,#FFE07A 60%,#FFD040);}
+.cookie-page-header{
+  width:100%;flex-shrink:0;padding:13px 16px 8px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.cookie-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 16px;gap:8px;}
+.ck-dots{display:flex;gap:5px;margin-bottom:2px;}
+.ckdot{width:9px;height:9px;border-radius:50%;background:rgba(180,120,0,.18);transition:background .3s;}
+.ckdot.used{background:var(--red);}
+.ck-counter{background:rgba(255,255,255,.55);border:1.5px dashed #FFAA00;border-radius:50px;padding:5px 18px;font-size:.9rem;color:#8B5A00;}
+
+.cookie-stage{width:210px;height:210px;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;}
+.cookie-stage::before{content:'';position:absolute;inset:-14px;border-radius:50%;background:conic-gradient(var(--red),#FF8C00,var(--yellow),var(--green),var(--blue),var(--purple),var(--red));animation:ringR 4s linear infinite;opacity:.52;}
+.cookie-stage::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:radial-gradient(circle,#FFF5D0 55%,transparent 100%);}
+@keyframes ringR{to{transform:rotate(360deg)}}
+.ck-wrap{position:relative;z-index:2;width:182px;height:182px;animation:ckIdle 3s ease-in-out infinite;transition:transform .15s;}
+.ck-wrap:active{transform:scale(.88) !important;}
+@keyframes ckIdle{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-13px) rotate(4deg)}}
+.ck-svg{width:100%;height:100%;overflow:visible;}
+.ckL,.ckR{transition:transform .5s cubic-bezier(.34,1.56,.64,1);}
+.cracking .ckL{transform:rotate(-38deg) translate(-22px,10px);}
+.cracking .ckR{transform:rotate(38deg)  translate(22px,10px);}
+.ck-hint{font-size:1.25rem;color:#8B5A00;background:rgba(255,255,255,.55);border:2px dashed #FFAA00;border-radius:50px;padding:7px 22px;animation:hintB 1.8s ease-in-out infinite;}
+@keyframes hintB{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+
+/* message overlay */
+#ckOverlay{position:fixed;inset:0;z-index:200;background:rgba(60,30,0,.6);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:18px;opacity:0;pointer-events:none;transition:opacity .35s;}
+#ckOverlay.show{opacity:1;pointer-events:auto;}
+.msg-paper{background:#FFFEF5;border-radius:20px;width:100%;max-width:370px;box-shadow:0 24px 64px rgba(0,0,0,.25);transform:scale(.4) rotate(-8deg);opacity:0;transition:transform .5s cubic-bezier(.34,1.56,.64,1),opacity .4s;overflow:hidden;border:3px solid rgba(255,200,0,.25);}
+#ckOverlay.show .msg-paper{transform:scale(1) rotate(0);opacity:1;}
+.mp-top{padding:15px 16px 10px;text-align:center;}
+.mp-top .big-em{font-size:3.2rem;display:block;animation:mpFloat 2s ease-in-out infinite;}
+@keyframes mpFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.mp-top h3{font-size:1.05rem;color:#fff;margin-top:3px;}
+.mp-body{padding:15px 16px 10px;text-align:center;}
+.mp-friends{font-size:1.9rem;margin-bottom:8px;}
+.mp-cat{display:inline-block;font-size:.82rem;padding:3px 12px;border-radius:50px;font-weight:700;margin-bottom:9px;}
+.mp-text{font-size:1.7rem;color:var(--dark);line-height:1.45;}
+.mp-text .qq{font-size:3.2rem;line-height:0;vertical-align:-.4em;opacity:.18;color:#8B5A00;font-family:Georgia,serif;}
+.mp-sub{margin-top:8px;font-size:.95rem;color:#8B5A00;line-height:1.55;}
+.mp-flags{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-top:10px;font-size:1.4rem;}
+.mp-foot{padding:8px 14px 15px;text-align:center;}
+.btn-next-ck{width:100%;padding:13px;font-size:1.35rem;font-family:'Gaegu',sans-serif;font-weight:700;background:linear-gradient(135deg,#FFD600,#FF8C00);color:#000;border:none;border-radius:13px;cursor:pointer;box-shadow:0 4px 16px rgba(255,180,0,.4);transition:transform .15s;}
+.btn-next-ck:active{transform:scale(.95);}
+.tap-close{font-size:.8rem;color:#BBB;margin-top:5px;}
+
+/* ════════════════════════════════
+   COUNTRY SELECT
+════════════════════════════════ */
+#s-map{background:var(--cream);}
+.map-hdr{width:100%;flex-shrink:0;padding:13px 16px 10px;background:linear-gradient(135deg,#1E40AF,#3B82F6);}
+.map-hdr h2{font-size:1.25rem;color:#fff;font-weight:700;}
+.map-hdr p{font-size:.8rem;color:rgba(255,255,255,.75);}
+.name-bar{display:flex;gap:8px;padding:10px 14px;background:#fff;border-bottom:1.5px solid #F0E8D8;flex-shrink:0;align-items:center;}
+.name-inp{flex:1;padding:10px 14px;font-size:1.1rem;font-family:'Gaegu',sans-serif;border:2px solid #E5D5B0;border-radius:13px;outline:none;background:#FFFEF5;}
+.name-inp:focus{border-color:var(--blue);}
+.country-section{padding:10px 14px 2px;}
+.cs-title{font-size:.9rem;font-weight:700;color:#555;display:flex;align-items:center;gap:5px;margin-bottom:8px;}
+.cs-title::after{content:'';flex:1;height:1.5px;background:#F0E8D8;border-radius:2px;}
+.country-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:4px;}
+.country-btn{
+  background:var(--card);border:2.5px solid #F0E8D8;border-radius:14px;
+  padding:9px 5px;text-align:center;cursor:pointer;
+  transition:all .2s cubic-bezier(.34,1.56,.64,1);
+}
+.country-btn:active{transform:scale(.89);}
+.country-btn.selected{border-color:var(--blue);background:#EFF6FF;transform:scale(1.05);}
+.cb-flag{font-size:1.7rem;display:block;}
+.cb-name{font-size:.68rem;color:var(--dark);margin-top:2px;line-height:1.2;}
+
+.btn-submit{
+  width:calc(100% - 28px);margin:8px 14px 10px;padding:15px;
+  font-size:1.35rem;font-family:'Gaegu',sans-serif;font-weight:700;
+  background:linear-gradient(135deg,#3B82F6,#1E40AF);color:#fff;
+  border:none;border-radius:15px;cursor:pointer;
+  box-shadow:0 5px 18px rgba(59,130,246,.35);transition:all .2s;
+  flex-shrink:0;opacity:.4;pointer-events:none;
+}
+.btn-submit.ready{opacity:1;pointer-events:auto;}
+.btn-submit:active{transform:scale(.96);}
+
+/* ════════════════════════════════
+   CHART SCREEN
+════════════════════════════════ */
+#s-chart{background:var(--cream);}
+.chart-hdr{width:100%;flex-shrink:0;padding:13px 16px 10px;background:linear-gradient(135deg,#7C3AED,#A855F7);}
+.chart-hdr h2{font-size:1.25rem;color:#fff;font-weight:700;}
+.chart-hdr p{font-size:.8rem;color:rgba(255,255,255,.75);}
+
+/* summary */
+.sum-row{display:flex;gap:9px;padding:10px 14px 0;flex-shrink:0;}
+.sum-card{flex:1;background:var(--card);border-radius:16px;padding:10px 8px;text-align:center;box-shadow:var(--shadow);}
+.sum-num{font-size:1.8rem;font-weight:700;}
+.sum-lbl{font-size:.7rem;color:#AAA;margin-top:1px;}
+
+/* tabs */
+.chart-tabs{display:flex;gap:7px;padding:9px 14px;flex-shrink:0;background:#fff;border-bottom:1.5px solid #F0E8D8;}
+.ctab{flex:1;padding:9px 4px;font-size:.9rem;font-family:'Gaegu',sans-serif;font-weight:700;background:#F5F0E8;color:#888;border:none;border-radius:50px;cursor:pointer;transition:.2s;}
+.ctab.active{background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff;}
+
+/* ── BAR CHART ── */
+.chart-section{padding:12px 14px 6px;}
+.chart-sec-label{font-size:.88rem;font-weight:700;color:#8B5A00;margin-bottom:8px;}
+
+.bar-row{display:flex;align-items:center;gap:7px;margin-bottom:9px;}
+.br-rank{font-size:1.1rem;width:22px;text-align:center;flex-shrink:0;}
+.br-flag{font-size:1.25rem;flex-shrink:0;width:26px;text-align:center;}
+.br-name{width:58px;font-size:.82rem;color:var(--dark);flex-shrink:0;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.br-track{flex:1;height:30px;background:#F0E8D8;border-radius:50px;overflow:hidden;position:relative;}
+.br-fill{
+  height:100%;border-radius:50px;
+  display:flex;align-items:center;justify-content:flex-end;padding-right:9px;
+  font-size:.8rem;font-weight:700;color:#fff;
+  transition:width 1.3s cubic-bezier(.34,1.2,.64,1);min-width:32px;
+}
+.br-cnt{width:24px;font-size:.9rem;font-weight:700;color:#555;text-align:right;flex-shrink:0;}
+
+/* ── DONUT CHART ── */
+.donut-wrap{padding:14px;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.donut-canvas-wrap{position:relative;width:200px;height:200px;}
+#donutCanvas{display:block;}
+.donut-center{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;pointer-events:none;
+}
+.donut-center-num{font-size:2rem;font-weight:700;color:var(--dark);}
+.donut-center-lbl{font-size:.8rem;color:#AAA;}
+.donut-legend{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:.82rem;color:#555;background:#fff;border-radius:50px;padding:4px 10px;box-shadow:0 1px 6px rgba(0,0,0,.08);}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+/* ── KIDS LIST ── */
+.kids-list{padding:10px 14px 20px;display:flex;flex-direction:column;gap:7px;}
+.kid-item{background:var(--card);border-radius:13px;padding:9px 12px;display:flex;align-items:center;gap:9px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.kid-flag{font-size:1.7rem;}
+.kid-info{flex:1;}
+.kid-name{font-size:.98rem;font-weight:700;color:var(--dark);}
+.kid-country{font-size:.8rem;color:#AAA;}
+.kid-time{font-size:.72rem;color:#CCC;}
+.kid-item-badge{font-size:.75rem;font-weight:700;padding:3px 9px;border-radius:50px;color:#fff;}
+
+/* ── CHART FOOTER BTNS ── */
+.chart-footer{padding:6px 14px 8px;flex-shrink:0;display:flex;gap:8px;}
+.btn-cf{flex:1;padding:11px 8px;font-size:.95rem;font-family:'Gaegu',sans-serif;font-weight:700;background:#F5F0E8;color:#555;border:1.5px solid #E5D5B0;border-radius:50px;cursor:pointer;transition:.2s;text-align:center;}
+.btn-cf:active{transform:scale(.95);}
+.btn-cf.danger{color:var(--red);border-color:#FFCCCC;background:#FFF5F5;}
+
+/* ════════════════════════════════
+   QUIZ
+════════════════════════════════ */
+#s-quiz{background:var(--cream);}
+.quiz-hdr{width:100%;flex-shrink:0;padding:13px 16px 10px;background:linear-gradient(135deg,#EC4899,#F97316);}
+.quiz-hdr h2{font-size:1.25rem;color:#fff;font-weight:700;}
+.quiz-hdr p{font-size:.8rem;color:rgba(255,255,255,.75);}
+.quiz-body{flex:1;display:flex;flex-direction:column;align-items:center;padding:14px;gap:12px;overflow-y:auto;}
+.quiz-body::-webkit-scrollbar{display:none;}
+
+.q-progress{width:100%;max-width:440px;}
+.q-prog-track{width:100%;height:8px;background:#E5D5B0;border-radius:50px;overflow:hidden;}
+.q-prog-fill{height:100%;background:linear-gradient(90deg,var(--pink),var(--orange));border-radius:50px;transition:width .5s ease;}
+.q-prog-text{font-size:.8rem;color:#AAA;text-align:right;margin-top:3px;}
+
+.q-card{background:var(--card);border-radius:20px;width:100%;max-width:440px;padding:20px 16px;box-shadow:var(--shadow);text-align:center;}
+.q-num{font-size:.85rem;color:var(--pink);font-weight:700;margin-bottom:6px;}
+.q-img{font-size:4.5rem;margin-bottom:6px;animation:qPop .5s cubic-bezier(.34,1.56,.64,1);}
+@keyframes qPop{from{transform:scale(.4) rotate(-12deg)}to{transform:scale(1) rotate(0)}}
+.q-text{font-size:1.5rem;color:var(--dark);line-height:1.4;}
+
+.q-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:440px;}
+.q-opt{
+  background:var(--card);border:2.5px solid #E5D5B0;border-radius:14px;
+  padding:13px 8px;font-size:1.05rem;font-family:'Gaegu',sans-serif;cursor:pointer;
+  color:var(--dark);transition:.2s;
+}
+.q-opt:active{transform:scale(.94);}
+.q-opt.correct{border-color:var(--green);background:#F0FDF4;color:var(--green);}
+.q-opt.wrong{border-color:var(--red);background:#FFF1F1;color:var(--red);}
+
+.q-exp{background:var(--card);border-radius:16px;padding:13px 14px;width:100%;max-width:440px;text-align:center;box-shadow:var(--shadow);}
+.q-exp p{font-size:1rem;color:var(--dark);}
+.btn-next-q{margin-top:10px;padding:11px 30px;font-size:1.15rem;font-family:'Gaegu',sans-serif;font-weight:700;background:linear-gradient(135deg,var(--pink),var(--orange));color:#fff;border:none;border-radius:50px;cursor:pointer;transition:.15s;}
+.btn-next-q:active{transform:scale(.95);}
+
+.q-result{background:var(--card);border-radius:20px;padding:26px 16px;text-align:center;box-shadow:var(--shadow);width:100%;max-width:440px;}
+.qr-emoji{font-size:4.5rem;animation:qPop .6s cubic-bezier(.34,1.56,.64,1);display:block;margin-bottom:10px;}
+.qr-score{font-size:2.4rem;font-weight:700;color:var(--purple);}
+.qr-msg{font-size:1.15rem;color:var(--dark);margin:6px 0 14px;}
+.qr-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.btn-qa{padding:12px 28px;font-size:1.15rem;font-family:'Gaegu',sans-serif;font-weight:700;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;border:none;border-radius:50px;cursor:pointer;transition:.15s;}
+.btn-qa:active{transform:scale(.95);}
+.btn-qb{padding:12px 22px;font-size:1.1rem;font-family:'Gaegu',sans-serif;background:#F5F0E8;color:#555;border:1.5px solid #E5D5B0;border-radius:50px;cursor:pointer;}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:82px;left:50%;transform:translateX(-50%) translateY(14px);background:rgba(20,12,0,.88);color:#fff;padding:10px 20px;border-radius:50px;font-size:.95rem;z-index:999;opacity:0;pointer-events:none;transition:all .3s;white-space:nowrap;border:1.5px solid rgba(255,255,255,.12);}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── SPARKLES ── */
+.spk{position:fixed;pointer-events:none;z-index:9999;animation:spkAnim .9s ease forwards;}
+@keyframes spkAnim{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-75px) scale(.2)}}
+/* ── CONFETTI ── */
+.conf{position:fixed;top:-10px;border-radius:3px;animation:cfFall linear forwards;pointer-events:none;z-index:9999;}
+@keyframes cfFall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+</style>
+</head>
+<body>
+<div id="bgFlags"></div>
+<div id="toast"></div>
+
+<!-- ══════════════════════════════════════
+     HOME
+══════════════════════════════════════ -->
+<div id="s-home" class="screen active">
+  <div class="rainbow-bar"></div>
+  <div class="scroll-body">
+    <div class="home-hero">
+      <div class="hero-globe">🌍</div>
+      <div class="hero-title">세계 친구<br>축제 주간 🎉</div>
+      <div class="hero-sub">✨ 다문화 특별 프로그램 ✨</div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="sc-num" id="stKids" style="color:var(--blue)">0</div><div class="sc-label">참여 친구</div></div>
+      <div class="stat-card"><div class="sc-num" id="stCnt"  style="color:var(--green)">0</div><div class="sc-label">나라 수</div></div>
+      <div class="stat-card"><div class="sc-num" id="stCk"   style="color:var(--orange)">0</div><div class="sc-label">쿠키 열기</div></div>
+      <div class="stat-card"><div class="sc-num" id="stQz"   style="color:var(--purple)">0</div><div class="sc-label">퀴즈 최고</div></div>
+    </div>
+
+    <div class="menu-grid">
+      <div class="menu-card mc-cookie" onclick="goTo('s-cookie')">
+        <span class="mc-icon">🥠</span>
+        <div class="mc-title">포춘 쿠키</div>
+        <div class="mc-desc">다문화 메시지를 열어봐요!</div>
+        <span class="mc-tag" style="background:var(--orange)">HOT 🔥</span>
+      </div>
+      <div class="menu-card mc-map" onclick="goTo('s-map')">
+        <span class="mc-icon">✈️</span>
+        <div class="mc-title">가고 싶은 나라</div>
+        <div class="mc-desc">내 나라를 골라 등록해요!</div>
+        <span class="mc-tag" style="background:var(--blue)">NEW ✨</span>
+      </div>
+      <div class="menu-card mc-quiz" onclick="initQuiz()">
+        <span class="mc-icon">🧩</span>
+        <div class="mc-title">세계 퀴즈</div>
+        <div class="mc-desc">나라 음식 인사말 맞추기!</div>
+        <span class="mc-tag" style="background:var(--purple)">FUN 🎉</span>
+      </div>
+      <div class="menu-card mc-chart" onclick="goTo('s-chart')">
+        <span class="mc-icon">📊</span>
+        <div class="mc-title">우리 반 그래프</div>
+        <div class="mc-desc">친구들 나라를 그래프로!</div>
+        <span class="mc-tag" style="background:var(--green)">LIVE 📈</span>
+      </div>
+    </div>
+
+    <div class="top-section">
+      <div class="section-label">🌍 우리 반 인기 나라 TOP5</div>
+      <div id="homeTop"></div>
+    </div>
+  </div>
+  <div class="bottom-nav" id="nav-home">
+    <button class="nav-item active" onclick="goTo('s-home')"><span class="nav-icon">🏠</span><span class="nav-label">홈</span></button>
+    <button class="nav-item"        onclick="goTo('s-cookie')"><span class="nav-icon">🥠</span><span class="nav-label">쿠키</span></button>
+    <button class="nav-item"        onclick="goTo('s-map')"><span class="nav-icon">✈️</span><span class="nav-label">나라선택</span></button>
+    <button class="nav-item"        onclick="goTo('s-chart')"><span class="nav-icon">📊</span><span class="nav-label">그래프</span></button>
+    <button class="nav-item"        onclick="initQuiz()"><span class="nav-icon">🧩</span><span class="nav-label">퀴즈</span></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     FORTUNE COOKIE
+══════════════════════════════════════ -->
+<div id="s-cookie" class="screen">
+  <div class="rainbow-bar"></div>
+  <div class="cookie-page-header">
+    <div><div style="font-size:1.2rem;font-weight:700;color:#8B5A00">🥠 포춘 쿠키</div><div style="font-size:.8rem;color:#AA7700">탭해서 메시지를 열어봐요!</div></div>
+    <button class="btn-back" style="background:rgba(180,120,0,.2);color:#8B5A00;border-color:rgba(180,120,0,.3)" onclick="goTo('s-home')">← 홈</button>
+  </div>
+  <div class="cookie-body">
+    <div class="ck-dots" id="ckDots"></div>
+    <div class="ck-counter" id="ckCounter">아직 0개 열었어요</div>
+    <div class="cookie-stage" onclick="openCookie()">
+      <div class="ck-wrap" id="ckWrap">
+        <svg class="ck-svg" viewBox="0 0 200 200">
+          <defs>
+            <radialGradient id="cg1" cx="38%" cy="33%"><stop offset="0%" stop-color="#FFE888"/><stop offset="55%" stop-color="#F5C030"/><stop offset="100%" stop-color="#C07810"/></radialGradient>
+            <radialGradient id="cg2" cx="62%" cy="66%"><stop offset="0%" stop-color="#FFD860"/><stop offset="100%" stop-color="#B07010"/></radialGradient>
+            <filter id="cs"><feDropShadow dx="3" dy="7" stdDeviation="7" flood-color="rgba(80,40,0,.28)"/></filter>
+          </defs>
+          <g class="ckL" filter="url(#cs)"><path d="M100 100 Q58 38 28 58 Q3 78 8 116 Q13 148 40 157 Q67 166 90 144 Q112 126 100 100Z" fill="url(#cg1)" stroke="#A06010" stroke-width="1.5"/><path d="M44 74 Q56 63 70 70" fill="none" stroke="rgba(255,255,190,.7)" stroke-width="4" stroke-linecap="round"/><circle cx="54" cy="112" r="3" fill="rgba(160,90,0,.25)"/><circle cx="70" cy="130" r="2.5" fill="rgba(160,90,0,.2)"/></g>
+          <g class="ckR" filter="url(#cs)"><path d="M100 100 Q142 38 172 58 Q197 78 192 116 Q187 148 160 157 Q133 166 110 144 Q88 126 100 100Z" fill="url(#cg2)" stroke="#A06010" stroke-width="1.5"/><path d="M156 74 Q144 63 130 70" fill="none" stroke="rgba(255,255,190,.7)" stroke-width="4" stroke-linecap="round"/><circle cx="146" cy="112" r="3" fill="rgba(160,90,0,.25)"/><circle cx="130" cy="130" r="2.5" fill="rgba(160,90,0,.2)"/></g>
+          <path d="M58 106 Q100 88 142 106" fill="none" stroke="#A06010" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="ck-hint">🥠 탭해서 열어봐요!</div>
+  </div>
+
+  <div id="ckOverlay" onclick="closeCkMsg(event)">
+    <div class="msg-paper" id="msgPaper">
+      <div class="mp-top" id="mpTop"><span class="big-em">🥠</span><h3 id="mpTitle">메시지</h3></div>
+      <div class="mp-body">
+        <div class="mp-friends" id="mpFriends">🧒👧🧒</div>
+        <div class="mp-cat" id="mpCat">사랑</div>
+        <div class="mp-text"><span class="qq">"</span><span id="mpText">메시지</span><span class="qq">"</span></div>
+        <div class="mp-sub" id="mpSub"></div>
+        <div class="mp-flags" id="mpFlags"></div>
+      </div>
+      <div class="mp-foot">
+        <button class="btn-next-ck" onclick="nextCookie()">🥠 다음 쿠키 열기!</button>
+        <div class="tap-close">배경을 탭하면 닫혀요</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="nav-item"        onclick="goTo('s-home')"><span class="nav-icon">🏠</span><span class="nav-label">홈</span></button>
+    <button class="nav-item active" onclick="goTo('s-cookie')"><span class="nav-icon">🥠</span><span class="nav-label">쿠키</span></button>
+    <button class="nav-item"        onclick="goTo('s-map')"><span class="nav-icon">✈️</span><span class="nav-label">나라선택</span></button>
+    <button class="nav-item"        onclick="goTo('s-chart')"><span class="nav-icon">📊</span><span class="nav-label">그래프</span></button>
+    <button class="nav-item"        onclick="initQuiz()"><span class="nav-icon">🧩</span><span class="nav-label">퀴즈</span></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     COUNTRY SELECT
+══════════════════════════════════════ -->
+<div id="s-map" class="screen">
+  <div class="rainbow-bar"></div>
+  <div class="map-hdr"><h2>✈️ 내가 가고 싶은 나라</h2><p>나라를 고르면 그래프에 바로 나타나요!</p></div>
+  <div class="name-bar" style="flex-direction:column;align-items:flex-start;gap:6px;padding:10px 14px;">
+    <div style="display:flex;align-items:center;gap:7px;width:100%">
+      <span style="font-size:.78rem;background:#FFF3CD;color:#856404;border:1.5px solid #FFE082;border-radius:50px;padding:3px 10px;flex-shrink:0;white-space:nowrap">🔒 개인정보보호</span>
+      <span style="font-size:.76rem;color:#AAA;">반 이름 + 이름 끝 한 글자만 써요</span>
+    </div>
+    <input class="name-inp" id="nameInp" type="text" placeholder="예) 새싹반-윤" maxlength="12" style="width:100%">
+    <div style="font-size:.75rem;color:#BFA040;">✏️ 예시: 새싹반-윤 · 꽃잎반-민 · 하늘반-아</div>
+  </div>
+  <div class="scroll-body">
+    <div class="country-section"><div class="cs-title">🌏 아시아</div><div class="country-grid" id="grid-asia"></div></div>
+    <div class="country-section"><div class="cs-title">🌍 유럽 · 아프리카</div><div class="country-grid" id="grid-eu"></div></div>
+    <div class="country-section" style="padding-bottom:8px"><div class="cs-title">🌎 아메리카 · 오세아니아</div><div class="country-grid" id="grid-am"></div></div>
+  </div>
+  <button class="btn-submit" id="btnSubmit" onclick="submitCountry()">그래프에 표시하기! 📊</button>
+  <div class="bottom-nav">
+    <button class="nav-item"        onclick="goTo('s-home')"><span class="nav-icon">🏠</span><span class="nav-label">홈</span></button>
+    <button class="nav-item"        onclick="goTo('s-cookie')"><span class="nav-icon">🥠</span><span class="nav-label">쿠키</span></button>
+    <button class="nav-item active" onclick="goTo('s-map')"><span class="nav-icon">✈️</span><span class="nav-label">나라선택</span></button>
+    <button class="nav-item"        onclick="goTo('s-chart')"><span class="nav-icon">📊</span><span class="nav-label">그래프</span></button>
+    <button class="nav-item"        onclick="initQuiz()"><span class="nav-icon">🧩</span><span class="nav-label">퀴즈</span></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHART SCREEN
+══════════════════════════════════════ -->
+<div id="s-chart" class="screen">
+  <div class="rainbow-bar"></div>
+  <div class="chart-hdr"><h2>📊 우리 반 나라 그래프</h2><p>친구들이 고른 나라를 한눈에 봐요!</p></div>
+  <div class="sum-row">
+    <div class="sum-card"><div class="sum-num" id="sumKids" style="color:var(--blue)">0</div><div class="sum-lbl">참여 친구</div></div>
+    <div class="sum-card"><div class="sum-num" id="sumCnt"  style="color:var(--green)">0</div><div class="sum-lbl">나라 수</div></div>
+    <div class="sum-card"><div class="sum-num" id="sumTop"  style="color:var(--orange);font-size:1.2rem">-</div><div class="sum-lbl">1위 나라</div></div>
+  </div>
+  <div class="chart-tabs">
+    <button class="ctab active" onclick="switchTab('bar',this)">📊 막대</button>
+    <button class="ctab"        onclick="switchTab('donut',this)">🍩 원형</button>
+    <button class="ctab"        onclick="switchTab('list',this)">📋 목록</button>
+  </div>
+  <div class="scroll-body" id="chartBody">
+    <!-- injected -->
+  </div>
+  <div class="chart-footer">
+    <button class="btn-cf" onclick="goTo('s-map')">✈️ 나도 선택하기</button>
+    <button class="btn-cf danger" onclick="resetData()">🗑️ 초기화</button>
+  </div>
+  <div class="bottom-nav">
+    <button class="nav-item"        onclick="goTo('s-home')"><span class="nav-icon">🏠</span><span class="nav-label">홈</span></button>
+    <button class="nav-item"        onclick="goTo('s-cookie')"><span class="nav-icon">🥠</span><span class="nav-label">쿠키</span></button>
+    <button class="nav-item"        onclick="goTo('s-map')"><span class="nav-icon">✈️</span><span class="nav-label">나라선택</span></button>
+    <button class="nav-item active" onclick="goTo('s-chart')"><span class="nav-icon">📊</span><span class="nav-label">그래프</span></button>
+    <button class="nav-item"        onclick="initQuiz()"><span class="nav-icon">🧩</span><span class="nav-label">퀴즈</span></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     QUIZ
+══════════════════════════════════════ -->
+<div id="s-quiz" class="screen">
+  <div class="rainbow-bar"></div>
+  <div class="quiz-hdr"><h2>🧩 세계 친구 퀴즈!</h2><p>나라 음식·인사말을 맞춰봐요!</p></div>
+  <div class="quiz-body" id="quizBody"></div>
+  <div class="bottom-nav">
+    <button class="nav-item"        onclick="goTo('s-home')"><span class="nav-icon">🏠</span><span class="nav-label">홈</span></button>
+    <button class="nav-item"        onclick="goTo('s-cookie')"><span class="nav-icon">🥠</span><span class="nav-label">쿠키</span></button>
+    <button class="nav-item"        onclick="goTo('s-map')"><span class="nav-icon">✈️</span><span class="nav-label">나라선택</span></button>
+    <button class="nav-item"        onclick="goTo('s-chart')"><span class="nav-icon">📊</span><span class="nav-label">그래프</span></button>
+    <button class="nav-item active" onclick="initQuiz()"><span class="nav-icon">🧩</span><span class="nav-label">퀴즈</span></button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════
+   DATA
+═══════════════════════ */
+const COUNTRIES = {
+  asia:[
+    {id:'kr',name:'한국',    flag:'🇰🇷'},{id:'jp',name:'일본',    flag:'🇯🇵'},{id:'cn',name:'중국',    flag:'🇨🇳'},
+    {id:'vn',name:'베트남',  flag:'🇻🇳'},{id:'th',name:'태국',    flag:'🇹🇭'},{id:'ph',name:'필리핀',  flag:'🇵🇭'},
+    {id:'id',name:'인도네시아',flag:'🇮🇩'},{id:'in',name:'인도',    flag:'🇮🇳'},{id:'mn',name:'몽골',    flag:'🇲🇳'},
+    {id:'kz',name:'카자흐스탄',flag:'🇰🇿'},{id:'uz',name:'우즈베키스탄',flag:'🇺🇿'},{id:'kh',name:'캄보디아',flag:'🇰🇭'},
+  ],
+  eu:[
+    {id:'fr',name:'프랑스',  flag:'🇫🇷'},{id:'de',name:'독일',    flag:'🇩🇪'},{id:'it',name:'이탈리아',flag:'🇮🇹'},
+    {id:'gb',name:'영국',    flag:'🇬🇧'},{id:'ru',name:'러시아',  flag:'🇷🇺'},{id:'tr',name:'터키',    flag:'🇹🇷'},
+    {id:'eg',name:'이집트',  flag:'🇪🇬'},{id:'ng',name:'나이지리아',flag:'🇳🇬'},{id:'za',name:'남아프리카',flag:'🇿🇦'},
+    {id:'et',name:'에티오피아',flag:'🇪🇹'},
+  ],
+  am:[
+    {id:'us',name:'미국',    flag:'🇺🇸'},{id:'ca',name:'캐나다',  flag:'🇨🇦'},{id:'mx',name:'멕시코',  flag:'🇲🇽'},
+    {id:'br',name:'브라질',  flag:'🇧🇷'},{id:'ar',name:'아르헨티나',flag:'🇦🇷'},{id:'au',name:'호주',    flag:'🇦🇺'},
+    {id:'nz',name:'뉴질랜드',flag:'🇳🇿'},
+  ],
+};
+const ALL = [...COUNTRIES.asia,...COUNTRIES.eu,...COUNTRIES.am];
+
+const FORTUNE = [
+  {cat:'친구',color:'#EC4899',bg:'rgba(236,72,153,.12)',friends:'🧒🏻👧🏽🧒🏿',flags:'🇰🇷🇯🇵🇨🇳🇺🇸🇫🇷',text:'세계 어디서나\n친구는 만들 수 있어요!',sub:'피부색이 달라도 함께 놀면 모두 친구예요 🤝'},
+  {cat:'사랑',color:'#F59E0B',bg:'rgba(245,158,11,.12)',friends:'👦🏻🧒🏾👧🏼',flags:'🇧🇷🇮🇳🇰🇷🇩🇪🇦🇺',text:'웃음은 전 세계\n공통 언어예요!',sub:'😊 웃으면 말 몰라도 마음이 통해요'},
+  {cat:'존중',color:'#3B82F6',bg:'rgba(59,130,246,.12)',friends:'👧🏻🧒🏽👦🏿',flags:'🇲🇽🇳🇬🇻🇳🇵🇭🇹🇭',text:'다른 나라 친구에게\n먼저 인사해봐요!',sub:'안녕 / Hello / Hola / こんにちは 어떤 말도 괜찮아요 🌟'},
+  {cat:'친구',color:'#22C55E',bg:'rgba(34,197,94,.12)',friends:'🧒🏼👦🏽👧🏿',flags:'🇿🇦🇪🇬🇷🇺🇬🇧🇸🇦',text:'함께 노는 친구가\n가장 소중해요!',sub:'어디서 왔는지보다 함께 노는 게 더 중요해요 🎈'},
+  {cat:'사랑',color:'#8B5CF6',bg:'rgba(139,92,246,.12)',friends:'👧🏻👦🏽🧒🏾',flags:'🇮🇹🇬🇷🇹🇷🇯🇵🇻🇳',text:'친구를 꼭 안아주면\n세상이 따뜻해져요!',sub:'따뜻한 마음은 국경이 없어요 🤗'},
+  {cat:'존중',color:'#14B8A6',bg:'rgba(20,184,166,.12)',friends:'👦🏻👧🏽🧒🏿',flags:'🇰🇷🇵🇭🇻🇳🇺🇿🇰🇿',text:'다문화 친구를\n사랑하는 내가 멋져요!',sub:'다름을 좋아하는 마음이 가장 아름다워요 🌸'},
+  {cat:'세계',color:'#FF8C00',bg:'rgba(255,140,0,.12)',friends:'🧒🏼👧🏻👦🏽',flags:'🇲🇳🇵🇰🇧🇩🇨🇭🇸🇬',text:'서로 다른 음식이\n모두 맛있듯이!',sub:'김치도 스시도 쌀국수도 모두 맛있잖아요! 🍜'},
+  {cat:'존중',color:'#E84040',bg:'rgba(232,64,64,.12)',friends:'👧🏽🧒🏻👦🏿',flags:'🇫🇷🇩🇪🇳🇬🇰🇪🇿🇼',text:'다른 언어는 특별한\n선물이에요!',sub:'새로운 말을 배우는 친구는 아주 특별해요 ✨'},
+  {cat:'친구',color:'#0EA5E9',bg:'rgba(14,165,233,.12)',friends:'🧒🏽👧🏿👦🏻',flags:'🇮🇳🇧🇷🇲🇽🇷🇺🇦🇺',text:'친구의 다른 점을\n놀리지 않아요!',sub:'나와 달라서 더 신기하고 더 배울 수 있어요 🌟'},
+  {cat:'세계',color:'#A855F7',bg:'rgba(168,85,247,.12)',friends:'👦🏻👧🏽🧒🏾',flags:'🇹🇭🇮🇩🇸🇬🇲🇾🇹🇼',text:'친구 이름을\n잘 불러줘요!',sub:'이름은 모두에게 아주 소중하거든요 💎'},
+  {cat:'세계',color:'#22C55E',bg:'rgba(34,197,94,.12)',friends:'👧🏻🧒🏾👦🏼',flags:'🇺🇸🇬🇧🇨🇦🇳🇿🇿🇦',text:'지구에는 195개\n나라가 있어요!',sub:'그만큼 많은 친구들이 나를 기다리고 있어요 🌍'},
+  {cat:'사랑',color:'#EC4899',bg:'rgba(236,72,153,.12)',friends:'🧒🏻👦🏾👧🏼',flags:'🇰🇷🇨🇳🇻🇳🇰🇭🇵🇭',text:'세계 친구들에게\n사랑을 보내요!',sub:'"친구야, 사랑해" 마음속으로 말해봐요 💌'},
+];
+
+const QUIZ_Q = [
+  {q:'이 음식은 어느 나라 음식일까요?',img:'🍱',opts:['한국','일본','중국','베트남'],ans:1,exp:'도시락(벤또 🍱)은 일본의 대표 음식이에요! 🇯🇵'},
+  {q:'이 음식은 어느 나라 음식일까요?',img:'🥟',opts:['인도','태국','중국','멕시코'],ans:2,exp:'만두(딤섬 🥟)는 중국의 대표 음식이에요! 🇨🇳'},
+  {q:'이 음식은 어느 나라 음식일까요?',img:'🍜',opts:['베트남','한국','일본','태국'],ans:0,exp:'쌀국수(포 🍜)는 베트남의 대표 음식이에요! 🇻🇳'},
+  {q:'이 음식은 어느 나라 음식일까요?',img:'🍕',opts:['프랑스','스페인','이탈리아','독일'],ans:2,exp:'피자 🍕는 이탈리아에서 시작됐어요! 🇮🇹'},
+  {q:'이 음식은 어느 나라 음식일까요?',img:'🍔',opts:['캐나다','미국','멕시코','브라질'],ans:1,exp:'햄버거 🍔는 미국의 대표 음식이에요! 🇺🇸'},
+  {q:'이 음식은 어느 나라 음식일까요?',img:'🍛',opts:['중국','베트남','인도','한국'],ans:2,exp:'카레 🍛는 인도의 대표 음식이에요! 매콤하고 맛있어요 🇮🇳'},
+  {q:'이 음식은 어느 나라 음식일까요?',img:'🌮',opts:['브라질','멕시코','미국','아르헨티나'],ans:1,exp:'타코 🌮는 멕시코의 대표 음식이에요! 🇲🇽'},
+  {q:'🇯🇵 일본어로 안녕은?',img:'👋',opts:['니하오','곤니치와','올라','봉주르'],ans:1,exp:'일본어로 こんにちは(곤니치와)는 안녕이에요! 🇯🇵'},
+  {q:'🇨🇳 중국어로 안녕은?',img:'👐',opts:['니하오','나마스테','살람','헬로'],ans:0,exp:'중국어로 你好(니하오)는 안녕이에요! 🇨🇳'},
+  {q:'🇦🇺 호주에만 사는 동물은?',img:'🦘',opts:['기린','캥거루','판다','북극곰'],ans:1,exp:'캥거루 🦘는 호주에서만 볼 수 있어요! 🇦🇺'},
+];
+
+const BAR_COLORS = ['#FF8C00','#3B82F6','#22C55E','#A855F7','#EC4899','#14B8A6','#E84040','#F59E0B','#0EA5E9','#6EE7B7','#F472B6','#34D399'];
+
+/* ═══════════════════════
+   STATE
+═══════════════════════ */
+let ckUsed = [];
+let selId  = null;
+let qIdx = 0, qScore = 0, qAnswered = false;
+let chartTab = 'bar';
+
+function getEntries(){ try{return JSON.parse(localStorage.getItem('mc_entries')||'[]')}catch{return[]} }
+function saveEntries(d){ localStorage.setItem('mc_entries',JSON.stringify(d)); }
+function getCkCount(){ return parseInt(localStorage.getItem('mc_ck')||'0'); }
+function saveCkCount(n){ localStorage.setItem('mc_ck',n); }
+function getQBest(){ return parseInt(localStorage.getItem('mc_qbest')||'0'); }
+function saveQBest(n){ localStorage.setItem('mc_qbest',n); }
+
+/* ═══════════════════════
+   INIT
+═══════════════════════ */
+initBgFlags();
+buildCountryGrids();
+initCkDots();
+refreshHome();
+
+function initBgFlags(){
+  const flags=['🇰🇷','🇯🇵','🇨🇳','🇺🇸','🇫🇷','🇩🇪','🇧🇷','🇮🇳','🇻🇳','🇵🇭','🇲🇽','🇳🇬','🇿🇦','🇦🇺','🇬🇧','🇷🇺','🇹🇭','🇦🇷','🇨🇦','🇲🇳'];
+  const c=document.getElementById('bgFlags');
+  for(let i=0;i<20;i++){
+    const f=document.createElement('div'); f.className='bf';
+    f.textContent=flags[i%flags.length];
+    f.style.cssText=`left:${Math.random()*100}%;font-size:${1.1+Math.random()*.7}rem;animation-duration:${11+Math.random()*13}s;animation-delay:${Math.random()*11}s`;
+    c.appendChild(f);
+  }
+}
+
+/* ═══════════════════════
+   SCREENS
+═══════════════════════ */
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='s-home')  refreshHome();
+  if(id==='s-chart') renderChart();
+}
+
+/* ═══════════════════════
+   HOME
+═══════════════════════ */
+function refreshHome(){
+  const entries=getEntries();
+  const uniq=new Set(entries.map(e=>e.id)).size;
+  document.getElementById('stKids').textContent=entries.length;
+  document.getElementById('stCnt').textContent=uniq;
+  document.getElementById('stCk').textContent=getCkCount();
+  document.getElementById('stQz').textContent=getQBest();
+  renderHomeTop(entries);
+}
+
+function renderHomeTop(entries){
+  const cnt={};
+  entries.forEach(e=>{ cnt[e.id]=(cnt[e.id]||0)+1; });
+  const sorted=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const max=sorted[0]?.[1]||1;
+  const el=document.getElementById('homeTop');
+  if(!sorted.length){
+    el.innerHTML='<p style="color:#AAA;font-size:.9rem;text-align:center;padding:10px 0">아직 아무도 참여 안 했어요!<br>✈️ 나라 선택하러 가봐요!</p>';
+    return;
+  }
+  const ranks=['🥇','🥈','🥉','4️⃣','5️⃣'];
+  el.innerHTML=sorted.map(([id,c],i)=>{
+    const co=ALL.find(x=>x.id===id); if(!co)return'';
+    const pct=Math.round(c/max*100);
+    const col=BAR_COLORS[i];
+    return `<div class="top-row">
+      <span class="top-rank">${ranks[i]}</span>
+      <span class="top-flag">${co.flag}</span>
+      <span class="top-name">${co.name}</span>
+      <div class="top-bar-wrap"><div class="top-bar-fill" style="width:${pct}%;background:${col}"></div></div>
+      <span class="top-cnt" style="color:${col}">${c}</span>
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════
+   COOKIE
+═══════════════════════ */
+function initCkDots(){
+  const c=document.getElementById('ckDots'); c.innerHTML='';
+  for(let i=0;i<12;i++){const d=document.createElement('div');d.className='ckdot';d.id='ckd'+i;c.appendChild(d);}
+  updateCkDots();
+}
+function updateCkDots(){
+  const n=ckUsed.length;
+  for(let i=0;i<12;i++){const d=document.getElementById('ckd'+i);if(d)d.classList.toggle('used',i<n);}
+  document.getElementById('ckCounter').textContent=n===0?'아직 0개 열었어요':`${n}개 열었어요! 🌟`;
+}
+
+function openCookie(){
+  if(ckUsed.length>=FORTUNE.length) ckUsed=[];
+  let idx; do{idx=Math.floor(Math.random()*FORTUNE.length);}while(ckUsed.includes(idx));
+  ckUsed.push(idx);
+  saveCkCount(getCkCount()+1);
+  updateCkDots();
+  document.getElementById('ckWrap').classList.add('cracking');
+  spawnSparklesAt(document.querySelector('.cookie-stage'));
+  setTimeout(()=>showCkMsg(FORTUNE[idx]),480);
+}
+
+function showCkMsg(m){
+  document.getElementById('mpTop').style.background=`linear-gradient(135deg,${m.color},${darken(m.color)})`;
+  document.getElementById('mpTitle').textContent='✦ '+m.cat+' 메시지 ✦';
+  document.getElementById('mpFriends').textContent=m.friends;
+  const cat=document.getElementById('mpCat');
+  cat.textContent='✦ '+m.cat+' ✦';
+  cat.style.cssText=`background:${m.bg};color:${m.color};border:2px solid ${m.color}`;
+  document.getElementById('mpText').innerHTML=m.text.replace(/\n/g,'<br>');
+  document.getElementById('mpSub').textContent=m.sub;
+  // flags: split emoji pairs
+  const arr=[...m.flags]; let pairs=[]; let i=0;
+  while(i<arr.length){if(arr[i+1]){pairs.push(arr[i]+arr[i+1]);i+=2;}else{i++;}}
+  document.getElementById('mpFlags').textContent=pairs.join(' ');
+  document.getElementById('ckOverlay').classList.add('show');
+}
+function closeCkMsg(e){if(e.target.id==='ckOverlay')doCloseCk();}
+function doCloseCk(){
+  document.getElementById('ckOverlay').classList.remove('show');
+  setTimeout(()=>document.getElementById('ckWrap').classList.remove('cracking'),300);
+}
+function nextCookie(){ doCloseCk(); setTimeout(openCookie,500); }
+
+/* ═══════════════════════
+   COUNTRY GRIDS
+═══════════════════════ */
+function buildCountryGrids(){
+  Object.entries(COUNTRIES).forEach(([region,list])=>{
+    const g=document.getElementById('grid-'+region); if(!g)return;
+    g.innerHTML='';
+    list.forEach(c=>{
+      const btn=document.createElement('div');
+      btn.className='country-btn'; btn.dataset.id=c.id;
+      btn.innerHTML=`<span class="cb-flag">${c.flag}</span><div class="cb-name">${c.name}</div>`;
+      btn.onclick=()=>selectC(c.id,btn);
+      g.appendChild(btn);
+    });
+  });
+}
+
+function selectC(id,btn){
+  document.querySelectorAll('.country-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected'); selId=id;
+  document.getElementById('btnSubmit').classList.add('ready');
+  const r=btn.getBoundingClientRect();
+  spawnSpk('💗',r.left+r.width/2,r.top+r.height/2);
+}
+
+function submitCountry(){
+  const name=document.getElementById('nameInp').value.trim();
+  if(!name){toast('이름을 먼저 써줘요! ✏️');return;}
+  if(!selId){toast('나라를 골라줘요! 🌍');return;}
+  const c=ALL.find(x=>x.id===selId);
+  const entries=getEntries();
+  entries.unshift({name,id:selId,flag:c.flag,cname:c.name,time:new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})});
+  saveEntries(entries);
+  document.getElementById('nameInp').value='';
+  document.querySelectorAll('.country-btn').forEach(b=>b.classList.remove('selected'));
+  selId=null;
+  document.getElementById('btnSubmit').classList.remove('ready');
+  toast(`🎉 ${name}의 ${c.flag} ${c.name} 등록 완료!`);
+  launchConfetti();
+  setTimeout(()=>goTo('s-chart'),800);
+}
+
+/* ═══════════════════════
+   CHART
+═══════════════════════ */
+function renderChart(){
+  const entries=getEntries();
+  const cnt={};
+  entries.forEach(e=>{ cnt[e.id]=(cnt[e.id]||0)+1; });
+  const sorted=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
+  const uniq=sorted.length;
+  const top=sorted[0]?ALL.find(x=>x.id===sorted[0][0]):null;
+
+  document.getElementById('sumKids').textContent=entries.length;
+  document.getElementById('sumCnt').textContent=uniq;
+  document.getElementById('sumTop').textContent=top?top.flag+top.name:'-';
+
+  if(chartTab==='bar')   renderBarChart(sorted);
+  if(chartTab==='donut') renderDonutChart(sorted, entries.length);
+  if(chartTab==='list')  renderList(entries);
+}
+
+function switchTab(tab,btn){
+  chartTab=tab;
+  document.querySelectorAll('.ctab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderChart();
+}
+
+/* ── BAR ── */
+function renderBarChart(sorted){
+  const body=document.getElementById('chartBody');
+  if(!sorted.length){
+    body.innerHTML='<p style="text-align:center;color:#AAA;padding:30px">아직 데이터가 없어요!<br>✈️ 나라를 선택해봐요!</p>';
+    return;
+  }
+  const max=sorted[0][1];
+  const ranks=['🥇','🥈','🥉'];
+  body.innerHTML=`<div class="chart-section">
+    <div class="chart-sec-label">📊 나라별 참여 현황 (총 ${sorted.length}개국)</div>
+    ${sorted.map(([id,c],i)=>{
+      const co=ALL.find(x=>x.id===id); if(!co)return'';
+      const pct=Math.round(c/max*100);
+      const col=BAR_COLORS[i%BAR_COLORS.length];
+      const light=['#FFD600','#F59E0B','#FDE68A'].includes(col);
+      return `<div class="bar-row">
+        <div class="br-rank">${i<3?ranks[i]:i+1}</div>
+        <div class="br-flag">${co.flag}</div>
+        <div class="br-name">${co.name}</div>
+        <div class="br-track">
+          <div class="br-fill" style="width:0%;background:${col};color:${light?'#555':'#fff'}" data-pct="${pct}%">
+            ${c}명
+          </div>
+        </div>
+        <div class="br-cnt">${c}</div>
+      </div>`;
+    }).join('')}
+  </div>`;
+  // animate bars
+  requestAnimationFrame(()=>setTimeout(()=>{
+    body.querySelectorAll('.br-fill').forEach(b=>b.style.width=b.dataset.pct);
+  },60));
+}
+
+/* ── DONUT ── */
+function renderDonutChart(sorted, total){
+  const body=document.getElementById('chartBody');
+  if(!sorted.length){
+    body.innerHTML='<p style="text-align:center;color:#AAA;padding:30px">아직 데이터가 없어요!<br>✈️ 나라를 선택해봐요!</p>';
+    return;
+  }
+  body.innerHTML=`
+    <div class="donut-wrap">
+      <div class="donut-canvas-wrap">
+        <canvas id="donutCanvas" width="200" height="200"></canvas>
+        <div class="donut-center">
+          <div class="donut-center-num">${total}</div>
+          <div class="donut-center-lbl">명 참여</div>
+        </div>
+      </div>
+      <div class="donut-legend" id="donutLegend"></div>
+    </div>
+    <div class="chart-section" style="padding-top:4px">
+      <div class="chart-sec-label">📋 나라별 비율</div>
+      ${sorted.map(([id,c],i)=>{
+        const co=ALL.find(x=>x.id===id); if(!co)return'';
+        const pct=total>0?Math.round(c/total*100):0;
+        const col=BAR_COLORS[i%BAR_COLORS.length];
+        return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;background:#fff;border-radius:12px;padding:8px 12px;box-shadow:0 1px 6px rgba(0,0,0,.06)">
+          <span style="font-size:1.3rem">${co.flag}</span>
+          <span style="font-size:.9rem;font-weight:700;color:var(--dark);flex:1">${co.name}</span>
+          <div style="width:80px;height:10px;background:#F0E8D8;border-radius:50px;overflow:hidden">
+            <div style="height:100%;width:${pct}%;background:${col};border-radius:50px;transition:width 1s ease"></div>
+          </div>
+          <span style="font-size:.85rem;color:${col};font-weight:700;min-width:36px;text-align:right">${pct}% (${c})</span>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+  // draw donut
+  requestAnimationFrame(()=>{
+    const canvas=document.getElementById('donutCanvas');
+    if(!canvas)return;
+    const ctx=canvas.getContext('2d');
+    let angle=-Math.PI/2;
+    const cx=100,cy=100,outer=88,inner=55;
+    sorted.forEach(([id,c],i)=>{
+      const co=ALL.find(x=>x.id===id); if(!co)return;
+      const slice=(c/total)*Math.PI*2;
+      const col=BAR_COLORS[i%BAR_COLORS.length];
+      ctx.beginPath();
+      ctx.moveTo(cx+Math.cos(angle)*inner,cy+Math.sin(angle)*inner);
+      ctx.arc(cx,cy,outer,angle,angle+slice);
+      ctx.arc(cx,cy,inner,angle+slice,angle,true);
+      ctx.closePath();
+      ctx.fillStyle=col; ctx.fill();
+      ctx.strokeStyle='#fff'; ctx.lineWidth=2.5; ctx.stroke();
+      // flag label
+      if(slice>0.25){
+        const mid=angle+slice/2;
+        const lr=(outer+inner)/2;
+        ctx.font='14px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText(co.flag,cx+Math.cos(mid)*lr,cy+Math.sin(mid)*lr);
+      }
+      angle+=slice;
+    });
+    // legend
+    const leg=document.getElementById('donutLegend');
+    if(leg) leg.innerHTML=sorted.map(([id,c],i)=>{
+      const co=ALL.find(x=>x.id===id); if(!co)return'';
+      return `<div class="legend-item"><div class="legend-dot" style="background:${BAR_COLORS[i%BAR_COLORS.length]}"></div>${co.flag} ${co.name} (${c})</div>`;
+    }).join('');
+  });
+}
+
+/* ── LIST ── */
+function renderList(entries){
+  const body=document.getElementById('chartBody');
+  if(!entries.length){
+    body.innerHTML='<p style="text-align:center;color:#AAA;padding:30px">아직 참여한 친구가 없어요!</p>';
+    return;
+  }
+  const colors=['#FF8C00','#3B82F6','#22C55E','#A855F7','#EC4899','#14B8A6','#E84040','#F59E0B'];
+  body.innerHTML=`<div class="kids-list">${
+    entries.slice(0,40).map((e,i)=>{
+      const col=colors[i%colors.length];
+      return `<div class="kid-item">
+        <div class="kid-flag">${e.flag}</div>
+        <div class="kid-info"><div class="kid-name">${e.name}</div><div class="kid-country">${e.cname}</div></div>
+        <div class="kid-time">${e.time}</div>
+        <div class="kid-item-badge" style="background:${col}">${e.cname}</div>
+      </div>`;
+    }).join('')
+  }</div>`;
+}
+
+function resetData(){
+  if(confirm('모든 데이터를 지울까요?')){
+    localStorage.removeItem('mc_entries');
+    renderChart(); refreshHome();
+    toast('🗑️ 초기화 완료!');
+  }
+}
+
+/* ═══════════════════════
+   QUIZ
+═══════════════════════ */
+function initQuiz(){
+  qIdx=0; qScore=0; qAnswered=false;
+  goTo('s-quiz');
+  renderQ();
+}
+function renderQ(){
+  const body=document.getElementById('quizBody');
+  if(qIdx>=QUIZ_Q.length){ renderQResult(); return; }
+  const q=QUIZ_Q[qIdx];
+  const pct=Math.round(qIdx/QUIZ_Q.length*100);
+  body.innerHTML=`
+    <div class="q-progress" style="width:100%;max-width:440px">
+      <div class="q-prog-track"><div class="q-prog-fill" style="width:${pct}%"></div></div>
+      <div class="q-prog-text">${qIdx+1} / ${QUIZ_Q.length}</div>
+    </div>
+    <div class="q-card">
+      <div class="q-num">문제 ${qIdx+1}</div>
+      <div class="q-img">${q.img}</div>
+      <div class="q-text">${q.q}</div>
+    </div>
+    <div class="q-opts">
+      ${q.opts.map((o,i)=>`<button class="q-opt" id="qo${i}" onclick="answerQ(${i})">${o}</button>`).join('')}
+    </div>
+    <div id="qExpBox" style="display:none">
+      <div class="q-exp"><p id="qExpTxt"></p><button class="btn-next-q" onclick="nextQ()">${qIdx<QUIZ_Q.length-1?'다음 문제 ➡️':'결과 보기! 🏆'}</button></div>
+    </div>
+  `;
+}
+function answerQ(i){
+  if(qAnswered)return; qAnswered=true;
+  const q=QUIZ_Q[qIdx]; const ok=i===q.ans;
+  if(ok) qScore++;
+  document.querySelectorAll('.q-opt').forEach((b,j)=>{
+    if(j===q.ans) b.classList.add('correct');
+    else if(j===i&&!ok) b.classList.add('wrong');
+    b.style.pointerEvents='none';
+  });
+  document.getElementById('qExpTxt').textContent=(ok?'🎉 정답! ':'😅 땡! 정답은 '+q.opts[q.ans]+'이에요. ')+q.exp;
+  document.getElementById('qExpBox').style.display='block';
+  if(ok){ spawnSparklesAt(document.querySelector('.q-card')); }
+}
+function nextQ(){ qIdx++; qAnswered=false; renderQ(); }
+function renderQResult(){
+  const pct=Math.round(qScore/QUIZ_Q.length*100);
+  const best=getQBest(); if(qScore>best) saveQBest(qScore);
+  const emoji=pct>=80?'🏆':pct>=60?'🌟':pct>=40?'😊':'💪';
+  const msg=pct>=80?'완벽해요! 세계 박사!':pct>=60?'잘했어요! 훌륭해요!':pct>=40?'좋아요! 더 배워봐요!':'도전 정신이 최고예요!';
+  document.getElementById('quizBody').innerHTML=`
+    <div class="q-result">
+      <span class="qr-emoji">${emoji}</span>
+      <div class="qr-score">${qScore} / ${QUIZ_Q.length}</div>
+      <div class="qr-msg">${msg}</div>
+      <div class="qr-btns">
+        <button class="btn-qa" onclick="initQuiz()">🔄 다시 도전!</button>
+        <button class="btn-qb" onclick="goTo('s-home')">🏠 홈으로</button>
+      </div>
+    </div>
+  `;
+  if(pct>=80) launchConfetti();
+}
+
+/* ═══════════════════════
+   FX
+═══════════════════════ */
+function spawnSparklesAt(el){
+  if(!el)return;
+  const r=el.getBoundingClientRect();
+  const cx=r.left+r.width/2, cy=r.top+r.height/2;
+  const emojis=['✨','🌟','⭐','💫','🌈','🎉','🥠','💛'];
+  for(let i=0;i<12;i++) setTimeout(()=>{
+    const a=Math.random()*Math.PI*2, d=50+Math.random()*70;
+    spawnSpk(emojis[Math.floor(Math.random()*emojis.length)],cx+Math.cos(a)*d,cy+Math.sin(a)*d);
+  },i*28);
+}
+function spawnSpk(emoji,x,y){
+  const s=document.createElement('div'); s.className='spk'; s.textContent=emoji;
+  s.style.cssText=`left:${x-12}px;top:${y-12}px;font-size:${1+Math.random()*.8}rem;animation-delay:${Math.random()*.1}s`;
+  document.body.appendChild(s); setTimeout(()=>s.remove(),1100);
+}
+function launchConfetti(){
+  const cols=['#FF8C00','#FFD600','#22C55E','#3B82F6','#A855F7','#EC4899','#14B8A6'];
+  for(let i=0;i<55;i++) setTimeout(()=>{
+    const c=document.createElement('div'); c.className='conf';
+    c.style.cssText=`left:${Math.random()*100}vw;width:${5+Math.random()*8}px;height:${7+Math.random()*10}px;background:${cols[i%cols.length]};animation-duration:${1.4+Math.random()*2}s;animation-delay:${Math.random()*.4}s`;
+    document.body.appendChild(c); setTimeout(()=>c.remove(),3500);
+  },i*14);
+}
+let toastT=null;
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2500);
+}
+function darken(hex){
+  let r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  r=Math.max(0,r-45);g=Math.max(0,g-35);b=Math.max(0,b-25);
+  return `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
+}
+document.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
+</script>
+</body>
+</html>
